@@ -22,6 +22,8 @@ DC-DC Buck Converter (MP1584EN) https://amzn.to/2tsqShb
 
 Jumper wire DIY kit https://amzn.to/2SWlLnR
 
+Switch (not the same I used, can't find that on amazon but this should work) https://amzn.to/2DNXOFH
+
 PCB (circuit boards to build out the circuit) https://amzn.to/2X2kATj
 
 PCB headers (that way you can plug in your arduino nano and mpu6050 and also remove them easily to add to other projects) https://amzn.to/2Ed66bu
