@@ -28,6 +28,8 @@ PCB headers (that way you can plug in your arduino nano and mpu6050 and also rem
 
 Water balloons (tire treads! can also use rubber bands) https://amzn.to/2V4cuYa
 
+M2 Bolts https://amzn.to/2GwnN8y
+
 Monoprice maker select v2 (3d printer used to make the parts) https://amzn.to/2TMFkMC
 
 Hatchbox 1.75 mm yellow PLA filament (plastic that's melted into the parts) https://amzn.to/2Edu8TR
