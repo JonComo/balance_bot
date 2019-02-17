@@ -3,9 +3,12 @@
 // MPU6050
 const int MPU_addr=0x68;  // I2C address of the MPU-6050
 int16_t acX,acY,acZ,tmp,gyX,gyY,gyZ;
-double aax,aay,aaz,at,agx,agy,agz;
 
-// Motors
+float angle = 0;
+float error_slow = 0;
+float error_slower = 0;
+
+// Motor Outputs (PWM)
 int in1 = 10;
 int in2 = 5;
 int in3 = 9;
@@ -14,115 +17,51 @@ int in4 = 11;
 // Timing
 long t = 0;
 
-// PID
-#include <PID_v1.h>
-double Setpoint, Input, Output;
-PID myPID(&Input, &Output, &Setpoint, .5, 0, 0.0, DIRECT);
-
-// Variables
-float angle = 0;
-
 void setup() {
   pinMode(in1, OUTPUT);
   pinMode(in2, OUTPUT);
   pinMode(in3, OUTPUT);
   pinMode(in4, OUTPUT);
-  pinMode(13, OUTPUT);
   
   wakeUpMPU();
   
-  delay(1000);
-  
-  Setpoint = 0; // forward is more negative
-  for (int i = 0; i < 500; i ++) {
-    t = millis();
-    
-    updateAngle();
-    digitalWrite(13, i%10==0);
-    while (millis() < t + 5);
-  }
-  
-  digitalWrite(13, LOW);
-  
-  Setpoint = angle;
-
-  //turn the PID on
-  myPID.SetMode(AUTOMATIC);
-  myPID.SetOutputLimits(-255, 255);
-  
-  //TCCR0A = _BV(COM0A1) | _BV(COM0B1) | _BV(WGM01) | _BV(WGM00); 
-  //TCCR0B = _BV(CS00);
-
-  //Serial.begin(115200);
-  //Serial.println("Hello Computer");
+  error_slow = 0;
+  error_slower = 0;
 }
-
-float ie = 0;
-int last_output = 0;
 
 void loop() {
   t = millis();
-  updateAngle();
-  //Serial.println(angle);
-  
-  Input = angle;
-  //myPID.Compute(); // sets Output
 
-  float error = (Setpoint - Input);
+  getMPU();
+  angle = angle + gyY * .005; // if you want to include acceleration ((1-f) * (angle + gyY * .005) + f * acZ);
+  
+  float error = angle + error_slow + error_slower;
 
-  Setpoint += (Setpoint - Input) * .2;
+  error_slow += error * .04; // learn better set point short run
+  error_slower += error * .001; // learn better set point long run
   
-  ie += error * .05;
-  ie *= 0.98;
+  error_slow *= 0.99;
   
-  Output = error * 2.0;
-
-  if (last_output > 0 && Output < 0) {
-    ie = 0;
-  } else if (last_output < 0 && Output > 0) {
-    ie = 0;
-  }
+  float Output = error * .2;
   
-  last_output = Output;
-
-  /*
-  ie += Output * .0001;
-  
-  int lim = 100;
-  if (ie > lim) {
-    ie = lim;
-  } else if (ie < -lim) {
-    ie = -lim;
-  }
-  
-  //Output += ie; */
-  
-  //float tilt = (acZ + 2600) / 10000.0 + gyY / 2000.0;
-  //int mspeed = int(-35 * tilt * 255.0); */
-
   if (Output > 255) {
     Output = 255;
   } else if (Output < -255) {
     Output = -255;
   }
   
-  if (abs(Input-Setpoint) > 9000) {
+  if (abs(angle) > 9000) {
     motorA(0);
     motorB(0);
-    ie = 0;
+    error_slow = 0;
+    error_slower = 0;
+    delay(5000);
   } else {
     motorA(int(Output));
     motorB(int(Output));
   }
   
-  while (millis() < t + 25);
-}
-
-void updateAngle() {
-  getMPU();
-  float f = 0.01;
-  angle = ((1-f) * (angle + gyY * .025) + f * acZ);
-  //angle *= 0.998;
+  while (millis() <= t + 5);
 }
 
 void motorA(int spd) {
@@ -169,17 +108,6 @@ void getMPU() {
   gyY=Wire.read()<<8|Wire.read();  // 0x45 (GYRO_YOUT_H) & 0x46 (GYRO_YOUT_L)
   gyZ=Wire.read()<<8|Wire.read();  // 0x47 (GYRO_ZOUT_H) & 0x48 (GYRO_ZOUT_L)
   Wire.endTransmission(true);
-  
   tmp = tmp/340.00+36.53; // to degrees C from datasheet
-  
-  float spd = .4;
-  // avg everything out
-  aax += (acX-aax)*spd;
-  aay += (acY-aay)*spd;
-  aaz += (acZ-aaz)*spd;
-  at += (tmp-at)*spd;
-  agx += (gyX-agx)*spd;
-  agy += (gyY-agy)*spd;
-  agz += (gyZ-agz)*spd;
 }
 
