@@ -6,6 +6,8 @@ PARTS:
 
 (these are amazon affiliate links, when you buy you support my work at no cost to you, thank you!)
 
+DC Geared Motors https://amzn.to/2X88h80
+
 Arduino nano (microcontroller) https://amzn.to/2EcQ29U
 
 MPU6050 (motion processor) https://amzn.to/2TW1FaQ
