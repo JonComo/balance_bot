@@ -24,6 +24,8 @@ PCB (circuit boards to build out the circuit) https://amzn.to/2X2kATj
 
 PCB headers (that way you can plug in your arduino nano and mpu6050 and also remove them easily to add to other projects) https://amzn.to/2Ed66bu
 
+Water balloons (tire treads! can also use rubber bands) https://amzn.to/2V4cuYa
+
 Monoprice maker select v2 (3d printer used to make the parts) https://amzn.to/2TMFkMC
 
 Hatchbox 1.75 mm yellow PLA filament (plastic that's melted into the parts) https://amzn.to/2Edu8TR
