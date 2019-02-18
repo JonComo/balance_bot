@@ -1,6 +1,6 @@
 Mini Balancing Robot (MBR)
 
-![hi there :-)](/pic.png?raw=true | width=200)
+<img src="https://github.com/JonComo/balance_bot/blob/master/pic.png" width="40%">
 
 This repo includes all files and parts list you need to make your own.
 
