@@ -1,6 +1,6 @@
 Mini Balancing Robot (MBR)
 
-![hi there :-)](/pic.png?raw=true)
+![hi there :-)](/pic.png?raw=true | width=200)
 
 This repo includes all files and parts list you need to make your own.
 
